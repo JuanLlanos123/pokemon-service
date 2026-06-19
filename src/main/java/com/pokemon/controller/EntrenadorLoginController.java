@@ -1,14 +1,17 @@
 package com.pokemon.controller;
 
 import com.pokemon.entity.Pokemon;
+import com.pokemon.exception.PokemonYaCapturadoException;
 import com.pokemon.service.EntrenadorService;
 import com.pokemon.service.PokemonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -85,5 +88,40 @@ public class EntrenadorLoginController {
                 .toList();
 
         return ResponseEntity.ok(pokemons);
+    }
+
+    // ─── POST /entrenador/{uuid_entrenador}/pokemons/{uuid_pokemon} ───────────
+
+    @PostMapping("/{uuidEntrenador}/pokemons/{uuidPokemon}")
+    @Operation(
+            summary = "Capturar un Pokémon (por UUID)",
+            description = "Asocia un Pokémon a un entrenador usando sus UUIDs. " +
+                          "**201 Created** con lista actualizada de pokémones si la captura es exitosa. " +
+                          "**400 Bad Request** con `{\"error\":\"true\",\"message\":\"...\"}` si el Pokémon ya pertenece al entrenador.")
+    public ResponseEntity<?> capturarPokemon(
+            @PathVariable UUID uuidEntrenador,
+            @PathVariable UUID uuidPokemon) {
+        try {
+            List<PokemonResumenResponse> resultado = entrenadorService
+                    .capturarPokemonPorUuid(uuidEntrenador, uuidPokemon)
+                    .stream()
+                    .map(p -> new PokemonResumenResponse(
+                            p.getUuid().toString(),
+                            p.getNombre(),
+                            p.getDescripcion()
+                    ))
+                    .toList();
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+
+        } catch (PokemonYaCapturadoException e) {
+            // Error exacto requerido por la especificación
+            return ResponseEntity.badRequest().body(
+                    Map.of("error", "true", "message", e.getMessage())
+            );
+        } catch (IllegalArgumentException e) {
+            // Entrenador o Pokémon no encontrado
+            return ResponseEntity.notFound().build();
+        }
     }
 }

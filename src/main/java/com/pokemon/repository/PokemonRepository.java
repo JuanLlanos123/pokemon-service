@@ -21,4 +21,14 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Integer> {
      */
     @Query("SELECT p FROM Pokemon p JOIN p.entrenadores e WHERE e.uuid = :uuid")
     List<Pokemon> findByEntrenadorUuid(@Param("uuid") UUID uuid);
+
+    /**
+     * Verifica si ya existe la relación entre el entrenador y el pokémon
+     * en la tabla intermedia pokemon_captura.
+     */
+    @Query("SELECT COUNT(p) > 0 FROM Pokemon p JOIN p.entrenadores e WHERE e.uuid = :entrenadorUuid AND p.uuid = :pokemonUuid")
+    boolean existsByEntrenadorUuidAndPokemonUuid(
+            @Param("entrenadorUuid") UUID entrenadorUuid,
+            @Param("pokemonUuid")   UUID pokemonUuid
+    );
 }

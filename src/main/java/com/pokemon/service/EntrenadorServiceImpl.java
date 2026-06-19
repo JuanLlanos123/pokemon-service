@@ -2,6 +2,7 @@ package com.pokemon.service;
 
 import com.pokemon.entity.Entrenador;
 import com.pokemon.entity.Pokemon;
+import com.pokemon.exception.PokemonYaCapturadoException;
 import com.pokemon.repository.EntrenadorRepository;
 import com.pokemon.repository.PokemonRepository;
 import org.springframework.stereotype.Service;
@@ -77,5 +78,24 @@ public class EntrenadorServiceImpl implements EntrenadorService {
 
         pokemon.getEntrenadores().remove(entrenador);
         pokemonRepository.save(pokemon);
+    }
+
+    @Override
+    public List<Pokemon> capturarPokemonPorUuid(UUID uuidEntrenador, UUID uuidPokemon) {
+        Entrenador entrenador = entrenadorRepository.findByUuid(uuidEntrenador)
+                .orElseThrow(() -> new IllegalArgumentException("Entrenador no encontrado con UUID: " + uuidEntrenador));
+        Pokemon pokemon = pokemonRepository.findByUuid(uuidPokemon)
+                .orElseThrow(() -> new IllegalArgumentException("Pokémon no encontrado con UUID: " + uuidPokemon));
+
+        // Verificar duplicado antes de insertar
+        if (pokemonRepository.existsByEntrenadorUuidAndPokemonUuid(uuidEntrenador, uuidPokemon)) {
+            throw new PokemonYaCapturadoException("pokemos ya esta registardo al entrandor");
+        }
+
+        pokemon.getEntrenadores().add(entrenador);
+        pokemonRepository.save(pokemon);
+
+        // Retornar la lista actualizada de pokémones del entrenador
+        return pokemonRepository.findByEntrenadorUuid(uuidEntrenador);
     }
 }
