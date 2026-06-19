@@ -33,6 +33,12 @@ public class PokemonServiceImpl implements PokemonService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Pokemon> findByEntrenadorUuid(UUID uuid) {
+        return pokemonRepository.findByEntrenadorUuid(uuid);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Pokemon> findById(Integer id) {
         return pokemonRepository.findById(id);
     }
