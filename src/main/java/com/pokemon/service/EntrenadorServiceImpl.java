@@ -42,6 +42,12 @@ public class EntrenadorServiceImpl implements EntrenadorService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Entrenador> findByEmail(String email) {
+        return entrenadorRepository.findByEmail(email);
+    }
+
+    @Override
     public Entrenador save(Entrenador entrenador) {
         return entrenadorRepository.save(entrenador);
     }

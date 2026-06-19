@@ -81,4 +81,21 @@ public class EntrenadorController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    public record LoginRequest(String email) {}
+    public record LoginResponse(String uuid, String uiuid) {}
+
+    @PostMapping("/login")
+    @Operation(summary = "Iniciar sesión de entrenador (API)", description = "Busca un entrenador registrado por su correo electrónico y retorna su UUID.")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        if (request == null || request.email() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return entrenadorService.findByEmail(request.email())
+                .map(entrenador -> ResponseEntity.ok(new LoginResponse(
+                        entrenador.getUuid().toString(),
+                        entrenador.getUuid().toString()
+                )))
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

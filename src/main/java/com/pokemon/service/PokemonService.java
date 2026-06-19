@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface PokemonService {
     List<Pokemon> findAll();
+    List<Pokemon> findByTipo(String tipo);
     Optional<Pokemon> findById(Integer id);
     Optional<Pokemon> findByUuid(UUID uuid);
     Pokemon save(Pokemon pokemon);

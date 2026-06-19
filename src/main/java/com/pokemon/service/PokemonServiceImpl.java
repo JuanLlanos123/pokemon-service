@@ -27,6 +27,12 @@ public class PokemonServiceImpl implements PokemonService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Pokemon> findByTipo(String tipo) {
+        return pokemonRepository.findByTipoPokemon_DescripcionIgnoreCase(tipo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Pokemon> findById(Integer id) {
         return pokemonRepository.findById(id);
     }

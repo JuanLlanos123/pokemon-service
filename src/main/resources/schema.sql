@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS pokemon.entrenador (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
     fecha_nacimiento DATE NOT NULL,
     fecha_vinculacion DATE NOT NULL,
     pueblo_id INT,

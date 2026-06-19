@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface EntrenadorRepository extends JpaRepository<Entrenador, Integer> {
     Optional<Entrenador> findByUuid(UUID uuid);
+    Optional<Entrenador> findByEmail(String email);
 }

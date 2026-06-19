@@ -18,6 +18,9 @@ public class Entrenador {
     @Column(name = "apellido", nullable = false, length = 100)
     private String apellido;
 
+    @Column(name = "email", nullable = false, unique = true, length = 150)
+    private String email;
+
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
 
@@ -34,10 +37,11 @@ public class Entrenador {
     public Entrenador() {
     }
 
-    public Entrenador(Integer id, String nombre, String apellido, LocalDate fechaNacimiento, LocalDate fechaVinculacion, Pueblo pueblo, UUID uuid) {
+    public Entrenador(Integer id, String nombre, String apellido, String email, LocalDate fechaNacimiento, LocalDate fechaVinculacion, Pueblo pueblo, UUID uuid) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.email = email;
         this.fechaNacimiento = fechaNacimiento;
         this.fechaVinculacion = fechaVinculacion;
         this.pueblo = pueblo;
@@ -105,5 +109,13 @@ public class Entrenador {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

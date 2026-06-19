@@ -10,6 +10,7 @@ public interface EntrenadorService {
     List<Entrenador> findAll();
     Optional<Entrenador> findById(Integer id);
     Optional<Entrenador> findByUuid(UUID uuid);
+    Optional<Entrenador> findByEmail(String email);
     Entrenador save(Entrenador entrenador);
     void deleteById(Integer id);
     void capturarPokemon(Integer entrenadorId, Integer pokemonId);
